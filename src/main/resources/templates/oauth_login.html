@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oauth2 Login</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+
+<body>
+<div class="container">
+	<div class="col-sm-3 well">
+		<h3>Login with:</h3>
+		<div class="list-group">
+			<p th:each="url : ${urls}">
+				<a th:text="${url.key}" th:href="${url.value}" class="list-group-item active">Client</a>
+			</p>
+		</div>
+	</div>
+</div>
+<p>직접 만든 버튼</p>
+<a th:href="@{/oauth2/authorize-client/google}">
+	<img src="https://developers.google.com/identity/images/g-logo.png" alt="Google 로그인" />
+</a>
+<a th:href="@{/oauth2/authorize-client/kakao}">
+	<img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" alt="Kakao 로그인" />
+</a>
+</body>
+</html>

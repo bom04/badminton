@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="js/header-script.js"></script>
+</head>
+<body>
+    <div th:fragment="header">
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">일파만파</a>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/notice">공지사항</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">공구게시판</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">팀 게시판</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">자유게시판</a>
+                        </li>
+                    </ul>
+                    <div class="text-end">
+                        <button type="button" onclick="redirectToLoginPage()" class="btn btn-outline-light me-2">Login</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

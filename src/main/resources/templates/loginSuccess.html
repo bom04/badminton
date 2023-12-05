@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">>
+<head>
+    <title>Login Success</title>
+    <style>
+        /* CSS 스타일 시트에 테이블 테두리를 빨간색으로 지정 */
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+<body>
+<h3>
+    <div class="label label-info">
+        Welcome, <span th:text="${name}">user</span>!
+   </div>
+</h3>
+
+<h3>User list</h3>
+<table>
+    <thead>
+        <tr>
+            <th>loginId</th>
+            <th>nickname</th>
+            <th>password</th>
+            <th>provider</th>
+            <th>providerId</th>
+            <th>role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.loginId}"></td>
+            <td th:text="${user.nickname}"></td>
+            <td th:text="${user.password}"></td>
+            <td th:text="${user.provider}"></td>
+            <td th:text="${user.providerId}"></td>
+            <td th:text="${user.role}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
