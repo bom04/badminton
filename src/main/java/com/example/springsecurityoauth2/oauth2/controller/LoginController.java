@@ -8,6 +8,8 @@ import java.util.Map;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpEntity;
@@ -24,11 +26,14 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.html.parser.Entity;
-
+@Slf4j
 @Controller
 public class LoginController {
 
@@ -68,9 +73,27 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String LoginPage(Model model) {
+    public String loginPage(Model model) {
         return "page/login";
     }
+
+    @GetMapping("/signUp")
+    public String signUp(Model model) {
+        model.addAttribute("user",new UserSaveForm());
+        return "page/signUp";
+    }
+
+    @PostMapping("/signUp")
+    public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "page/signUp";
+        }
+        log.info("success");
+        return "page/signUp";
+    }
+
     @GetMapping("/oauth_login")
     public String getLoginPage(Model model) {
         // ClientRegistration: 진행하는 oauth login이 facebook 타입인지 google 타입인지 등을 저장해놓는 변수(oauth2에 내장된 함수)

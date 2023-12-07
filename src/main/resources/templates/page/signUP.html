@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>일파만파</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/signUp.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column h-100">
+<header>
+    <div th:replace="~{fragment/header}"></div>
+</header>
+
+<!-- 메인 페이지 -->
+<main class="form-signin w-100 m-auto">
+<div class="container">
+    <form novalidate th:object="${user}" method="post"> <!--th:action="@{/signUp}" method="post"-->
+        <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+        <hr>
+
+<!--        <div class="row g-3">-->
+<!--        <div class="mb-1">-->
+<!--            <label for="email" class="form-label">Email</label>-->
+<!--            <input type="email" class="form-control" id="email" placeholder="소셜 로그인 이메일 본인꺼 입력" disabled>-->
+<!--        </div>-->
+
+        <div class="mb-1">
+            <label for="nickname" class="form-label">nickname</label>
+            <input type="text" class="form-control" id="nickname" th:field="*{nickname}" th:errorclass="field-error" placeholder="닉네임을 입력하세요" required>
+            <div class="field-error" th:errors="*{nickname}">
+                닉네임은 필수입력입니다
+            </div>
+        </div>
+
+<!--        <div class="my-3">-->
+<!--            <label class="form-label">Gender</label>-->
+<!--            <div class="form-check">-->
+<!--                <input id="man" name="genderCheck" type="radio" class="form-check-input" checked required>-->
+<!--                <label class="form-check-label" for="man">Man</label>-->
+<!--            </div>-->
+<!--            <div class="form-check">-->
+<!--                <input id="woman" name="genderCheck" type="radio" class="form-check-input" required>-->
+<!--                <label class="form-check-label" for="woman">Woman</label>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-md-5">-->
+<!--            <label for="year" class="form-label">Birth-Year</label>-->
+<!--            <select class="form-select" id="year" th:field="*{year}" required>-->
+<!--                <option value="">Choose...</option>-->
+<!--                <option>United States</option>-->
+<!--            </select>-->
+<!--            <div class="field-error">-->
+<!--                Please select your birth date-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-md-4">-->
+<!--            <label for="month" class="form-label">Month</label>-->
+<!--            <select class="form-select" id="month" th:field="*{month}" required>-->
+<!--                <option value="">Choose...</option>-->
+<!--                <option>California</option>-->
+<!--            </select>-->
+<!--            <div class="field-error">-->
+<!--                Please select your birth date-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-md-3">-->
+<!--            <label for="date" class="form-label">Date</label>-->
+<!--            <select class="form-select" id="date" th:field="*{date}" required>-->
+<!--                <option value="">Choose...</option>-->
+<!--                <option>California</option>-->
+<!--            </select>-->
+<!--            <div class="field-error">-->
+<!--                Please select your birth date-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <button class="btn btn-primary w-100 py-2 mt-3" type="submit">Sign Up</button>
+    </form>
+</div>
+</main>
+
+<footer>
+    <div th:replace="~{fragment/footer}"></div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
