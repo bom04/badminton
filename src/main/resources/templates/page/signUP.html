@@ -1,14 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>일파만파</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<!--    <link href="/resources/css/plugin/datepicker/bootstrap-datepicker.css" rel="stylesheet">-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js" integrity="sha512-LsnSViqQyaXpD4mBBdRYeP6sRwJiJveh2ZIbW41EBrNmKxgr/LFZIiWT6yr+nycvhvauz8c2nYMhrP80YhG7Cw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="/css/plugin/bootstrap-datepicker.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/signUp.css" rel="stylesheet">
+
+    <script>
+        $(function() {
+            $('#birth').datepicker({
+                format: "yyyy-mm-dd",	//데이터 포맷 형식(yyyy : 년 mm : 월 dd : 일 )
+                startDate: '-100y',	//달력에서 선택 할 수 있는 가장 빠른 날짜. 이전으로는 선택 불가능 ( d : 일 m : 달 y : 년 w : 주)
+                endDate: '+0d',	//달력에서 선택 할 수 있는 가장 느린 날짜. 이후로 선택 불가 ( d : 일 m : 달 y : 년 w : 주)
+                autoclose: true,	//사용자가 날짜를 클릭하면 자동 캘린더가 닫히는 옵션
+                calendarWeeks: false, //캘린더 옆에 몇 주차인지 보여주는 옵션 기본값 false 보여주려면 true
+                clearBtn: false, //날짜 선택한 값 초기화 해주는 버튼 보여주는 옵션 기본값 false 보여주려면 true
+                datesDisabled: false,//선택 불가능한 일 설정 하는 배열 위에 있는 format 과 형식이 같아야함.
+                daysOfWeekDisabled: false,	//선택 불가능한 요일 설정 0 : 일요일 ~ 6 : 토요일
+                daysOfWeekHighlighted: false, //강조 되어야 하는 요일 설정
+                disableTouchKeyboard: false,	//모바일에서 플러그인 작동 여부 기본값 false 가 작동 true가 작동 안함.
+                immediateUpdates: false,	//사용자가 보는 화면으로 바로바로 날짜를 변경할지 여부 기본값 :false
+                multidate: false, //여러 날짜 선택할 수 있게 하는 옵션 기본값 :false
+                multidateSeparator: ",", //여러 날짜를 선택했을 때 사이에 나타나는 글짜 2019-05-01,2019-06-01
+                templates: {
+                    leftArrow: '&laquo;',
+                    rightArrow: '&raquo;'
+                }, //다음달 이전달로 넘어가는 화살표 모양 커스텀 마이징
+                showWeekDays: true,// 위에 요일 보여주는 옵션 기본값 : true
+                title: "달력",	//캘린더 상단에 보여주는 타이틀
+                todayHighlight: true,	//오늘 날짜에 하이라이팅 기능 기본값 :false
+                toggleActive: true,	//이미 선택된 날짜 선택하면 기본값 : false인경우 그대로 유지 true인 경우 날짜 삭제
+                weekStart: 0,//달력 시작 요일 선택하는 것 기본값은 0인 일요일
+                language: "ko"	//달력의 언어 선택, 그에 맞는 js로 교체해줘야한다.
+
+            })
+            .on('changeDate', function (e) {
+                /* 이벤트의 종류 */
+                //show : datePicker가 보이는 순간 호출
+                //hide : datePicker가 숨겨지는 순간 호출
+                //clearDate: clear 버튼 누르면 호출
+                //changeDate : 사용자가 클릭해서 날짜가 변경되면 호출 (개인적으로 가장 많이 사용함)
+
+                console.log(e);
+                // e.date를 찍어보면 Thu Jun 27 2019 00:00:00 GMT+0900 (한국 표준시) 위와 같은 형태로 보인다.
+            });
+        });
+    </script>
 </head>
+
 <body class="d-flex flex-column h-100">
 <header>
     <div th:replace="~{fragment/header}"></div>
@@ -21,74 +69,72 @@
         <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
         <hr>
 
-<!--        <div class="row g-3">-->
-<!--        <div class="mb-1">-->
-<!--            <label for="email" class="form-label">Email</label>-->
-<!--            <input type="email" class="form-control" id="email" placeholder="소셜 로그인 이메일 본인꺼 입력" disabled>-->
-<!--        </div>-->
+        <div class="row g-3">
+        <div class="mb-1">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="소셜 로그인 이메일 본인꺼 입력" disabled>
+        </div>
+        <div class="row g-3">
+            <div class="mb-1">
+                <label for="profileImage" class="form-label">프로필 사진</label>
+                <img th:src="*{profileImage}" class="form-control" id="profileImage" style="width:100px; height: 100px;"/>
+                <button type="button" class="btn btn-outline-primary mt-2 btn-sm">사진 바꾸기</button>
+            </div>
+        </div>
 
         <div class="mb-1">
-            <label for="nickname" class="form-label">nickname</label>
+            <label for="nickname" class="form-label">닉네임</label>
             <input type="text" class="form-control" id="nickname" th:field="*{nickname}" th:errorclass="field-error" placeholder="닉네임을 입력하세요" required>
             <div class="field-error" th:errors="*{nickname}">
                 닉네임은 필수입력입니다
             </div>
         </div>
 
-<!--        <div class="my-3">-->
-<!--            <label class="form-label">Gender</label>-->
-<!--            <div class="form-check">-->
-<!--                <input id="man" name="genderCheck" type="radio" class="form-check-input" checked required>-->
-<!--                <label class="form-check-label" for="man">Man</label>-->
-<!--            </div>-->
-<!--            <div class="form-check">-->
-<!--                <input id="woman" name="genderCheck" type="radio" class="form-check-input" required>-->
-<!--                <label class="form-check-label" for="woman">Woman</label>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="my-3">
+            <label class="form-label">성별</label>
+            <div class="form-check">
+                <label class="form-check-label" th:for="isMale">남자</label>
+                <input type="radio" th:field="*{isMale}" value="true"/>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" th:for="isMale">여자</label>
+                <input type="radio" th:field="*{isMale}" value="false"/>
+            </div>
+        </div>
 
-<!--        <div class="col-md-5">-->
-<!--            <label for="year" class="form-label">Birth-Year</label>-->
-<!--            <select class="form-select" id="year" th:field="*{year}" required>-->
-<!--                <option value="">Choose...</option>-->
-<!--                <option>United States</option>-->
-<!--            </select>-->
-<!--            <div class="field-error">-->
-<!--                Please select your birth date-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        </div>-->
-
-<!--        <div class="col-md-4">-->
-<!--            <label for="month" class="form-label">Month</label>-->
-<!--            <select class="form-select" id="month" th:field="*{month}" required>-->
-<!--                <option value="">Choose...</option>-->
-<!--                <option>California</option>-->
-<!--            </select>-->
-<!--            <div class="field-error">-->
-<!--                Please select your birth date-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div class="col-md-3">-->
-<!--            <label for="date" class="form-label">Date</label>-->
-<!--            <select class="form-select" id="date" th:field="*{date}" required>-->
-<!--                <option value="">Choose...</option>-->
-<!--                <option>California</option>-->
-<!--            </select>-->
-<!--            <div class="field-error">-->
-<!--                Please select your birth date-->
-<!--            </div>-->
-<!--        </div>-->
-
+        <div class="col-mb-1 my-3">
+            <label for="birth" class="form-label">생년월일</label>
+            <input type="text" class="form-control" id="birth" th:field="*{birth}" th:errorclass="field-error" placeholder="1996-12-25" required>
+            <div class="field-error" th:errors="*{birth}">
+                생년월일은 필수입력입니다
+            </div>
+        </div>
+        <div class="mb-1">
+            <label for="career" class="form-label">구력</label>
+            <div class="alert alert-info" role="alert">
+                왕초심: 게임 룰을 잘 알지 못하고 이제 막 배우는 수준<br>
+                초심: 레슨 6개월 이상. 게임 룰을 알고 칠 줄 아는 수준
+            </div>
+            <select class="form-select" aria-label="Default select example" id="career" th:field="*{career}" th:errorclass="field-error">
+                <option value="A">A조</option>
+                <option value="B">B조</option>
+                <option value="C">C조</option>
+                <option value="D">D조</option>
+                <option value="Beginner">초심</option>
+                <option value="SupperBeginner">왕초심</option>
+            </select>
+            <div class="field-error" th:errors="*{career}">
+                구력은 필수입력입니다
+            </div>
+        </div>
         <button class="btn btn-primary w-100 py-2 mt-3" type="submit">Sign Up</button>
     </form>
 </div>
+
 </main>
 
 <footer>
     <div th:replace="~{fragment/footer}"></div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

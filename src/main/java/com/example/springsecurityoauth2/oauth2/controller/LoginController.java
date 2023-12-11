@@ -8,7 +8,9 @@ import java.util.Map;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.form.UserDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
@@ -51,14 +53,12 @@ public class LoginController {
     @GetMapping("/notice")
     public String noticeBoard(Model model) {
         User user1= User.builder()
-                .loginId(String.valueOf(123L))
                 .nickname("bom04")
                 .provider("kakao")
                 .providerId("kakaoId")
                 .role(UserRole.USER)
                 .build();
         User user2= User.builder()
-                .loginId(String.valueOf(1233L))
                 .nickname("bom05")
                 .provider("kakao1")
                 .providerId("kakaoId1")
@@ -77,19 +77,37 @@ public class LoginController {
         return "page/login";
     }
 
-    @GetMapping("/signUp")
-    public String signUp(Model model) {
+    @GetMapping("/test")
+    public String test(Model model) {
+
         model.addAttribute("user",new UserSaveForm());
+        return "page/test";
+    }
+
+    @GetMapping("/signUp")
+    public String signUp(Model model, HttpSession session) {
+        UserSaveForm form=new UserSaveForm();
+        form.setIsMale(true);
+        UserDto userDto=(UserDto)session.getAttribute("userDto");
+        form.setEmail(userDto.getEmail());
+        form.setProfileImage(userDto.getProfileImage());
+        model.addAttribute("user",form);
         return "page/signUp";
     }
 
     @PostMapping("/signUp")
-    public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult) {
+    public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult,HttpSession session) {
+        UserDto userDto = (UserDto) session.getAttribute("userDto");
+        form.setEmail(userDto.getEmail());
+        form.setProfileImage(userDto.getProfileImage());
 
+        log.info("form={}",form);
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "page/signUp";
         }
+        log.info("user={}",form);
+
         log.info("success");
         return "page/signUp";
     }

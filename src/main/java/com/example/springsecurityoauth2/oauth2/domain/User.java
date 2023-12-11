@@ -18,11 +18,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String loginId;
-    private String password;
     private String nickname;
+    private String email;
+    private Boolean isMale;
+    private String birth;
+    private String career;
     private String provider;
     private String providerId;
 
     private UserRole role;
+
+//    private String image;
 }

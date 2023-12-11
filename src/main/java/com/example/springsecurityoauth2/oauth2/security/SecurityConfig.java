@@ -27,7 +27,9 @@ import org.springframework.security.oauth2.client.web.HttpSessionOAuth2Authoriza
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @PropertySource("application-oauth2.properties")
@@ -38,6 +40,9 @@ public class SecurityConfig {
 
     @Autowired
     private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -54,7 +59,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/oauth_login", "/loginFailure", "/h2-console/**",
-                                        "/","/notice","/login","/signUp").permitAll()
+                                        "/","/notice","/login","/signUp","/test").permitAll()
 
                                 .anyRequest().authenticated()
                 )
@@ -65,12 +70,14 @@ public class SecurityConfig {
                                                         authorizationEndpoint
                                                                 .baseUri("/oauth2/authorize-client/**") // oauth2 접근시 사용할 uri 설정(ex.구글 로그인 버튼 href 경로)
                                         )
-                                        .defaultSuccessUrl("/loginSuccess")
-                                        .successHandler(customAuthenticationSuccessHandler)
-                                        .failureUrl("/loginFailure")
+//                                        .defaultSuccessUrl("/loginSuccess")
                                         .userInfoEndpoint()
                                         .userService(principalOauth2UserService) // scope 설정 안하면 구글 로그인은 해당 부분이 실행되지 않는 문제 발생
-                );
+                                        .and()
+                                        .successHandler(customAuthenticationSuccessHandler)
+                                        .failureHandler(customAuthenticationFailureHandler)
+//                                        .failureUrl("/loginFailure")
+                            );
         return http.build();
     }
 

@@ -3,11 +3,14 @@ package com.example.springsecurityoauth2.oauth2.security;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.exception.CustomOAuth2AuthenticationException;
+import com.example.springsecurityoauth2.oauth2.form.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +55,48 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 //    }
 
     // 구글, 카카오 로그인 포함
+//    @Override
+//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+//        OAuth2User oAuth2User = super.loadUser(userRequest);
+//
+//        OAuth2UserInfo oAuth2UserInfo = null;
+//
+//        String provider = userRequest.getClientRegistration().getRegistrationId();
+//
+//        if(provider.equals("google")) {
+//            log.info("구글 로그인 요청");
+//            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+//        } else if(provider.equals("kakao")) {
+//            log.info("카카오 로그인 요청");
+//            oAuth2UserInfo = new KakaoUserInfo((Map)oAuth2User.getAttributes());
+//        }
+//
+//        String providerId = oAuth2UserInfo.getProviderId();
+//        String email = oAuth2UserInfo.getEmail();
+//        String loginId = provider + "_" + providerId;
+//        String nickname = oAuth2UserInfo.getName();
+//
+//
+//        Optional<User> optionalUser = userRepository.findByLoginId(loginId);
+//        User user = null;
+//
+//        if(optionalUser.isEmpty()) {
+//            user = User.builder()
+//                    .loginId(loginId)
+//                    .nickname(nickname)
+//                    .provider(provider)
+//                    .providerId(providerId)
+//                    .role(UserRole.USER)
+//                    .build();
+//            userRepository.save(user);
+//        } else {
+//            user = optionalUser.get();
+//        }
+//
+//        return new PrincipalDetails(user, oAuth2User.getAttributes());
+//    }
+
+    // 로그인 후 회원가입 진행
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -70,22 +115,36 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
-        String loginId = provider + "_" + providerId;
-        String nickname = oAuth2UserInfo.getName();
+        String profilePicture =oAuth2UserInfo.getProfileImage();
+        // 구글 프로필 이미지
+//        String profilePicture = (String) oAuth2User.getAttributes().get("picture");
+        // 카카오 프로필 이미지
+//        String profilePicture =(String) ((Map) oAuth2User.getAttributes().get("properties")).get("profile_image");
 
 
-        Optional<User> optionalUser = userRepository.findByLoginId(loginId);
+        log.info("email={}",email);
+        log.info("profile_image={}",profilePicture);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         User user = null;
 
         if(optionalUser.isEmpty()) {
-            user = User.builder()
-                    .loginId(loginId)
-                    .nickname(nickname)
+            // google-picture, kakao-
+            UserDto userDto=UserDto.builder()
+                    .email(email)
                     .provider(provider)
                     .providerId(providerId)
-                    .role(UserRole.USER)
+                    .profileImage(profilePicture)
                     .build();
-            userRepository.save(user);
+            throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다",userDto);
+
+//            user = User.builder()
+//                    .loginId(loginId)
+//                    .nickname(nickname)
+//                    .provider(provider)
+//                    .providerId(providerId)
+//                    .role(UserRole.USER)
+//                    .build();
+//            userRepository.save(user);
         } else {
             user = optionalUser.get();
         }
