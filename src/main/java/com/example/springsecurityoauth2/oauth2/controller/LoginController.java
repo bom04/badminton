@@ -1,5 +1,8 @@
 package com.example.springsecurityoauth2.oauth2.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +13,7 @@ import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
 import com.example.springsecurityoauth2.oauth2.form.UserDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import com.example.springsecurityoauth2.oauth2.validation.ValidFile;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +34,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Controller
@@ -85,27 +88,36 @@ public class LoginController {
     }
 
     @GetMapping("/signUp")
-    public String signUp(Model model, HttpSession session) {
+    public String signUp(Model model, HttpSession session) throws Exception {
+        if(session.getAttribute("userDto")==null) {
+            throw new Exception("잘못된 접근입니다!");
+        }
+        UserDto userDto=(UserDto)session.getAttribute("userDto");
         UserSaveForm form=new UserSaveForm();
         form.setIsMale(true);
-        UserDto userDto=(UserDto)session.getAttribute("userDto");
         form.setEmail(userDto.getEmail());
         form.setProfileImage(userDto.getProfileImage());
-        model.addAttribute("user",form);
+        model.addAttribute("user", form);
+        log.info("get form={}",form);
         return "page/signUp";
     }
 
     @PostMapping("/signUp")
-    public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult,HttpSession session) {
+    public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult,
+                         HttpSession session) {
+
         UserDto userDto = (UserDto) session.getAttribute("userDto");
         form.setEmail(userDto.getEmail());
         form.setProfileImage(userDto.getProfileImage());
 
-        log.info("form={}",form);
-        if (bindingResult.hasErrors()) {
+        log.info("post form={}",form);
+        log.info("post image={}",form.getImage().getOriginalFilename());
+
+        if(bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "page/signUp";
         }
+
         log.info("user={}",form);
 
         log.info("success");
