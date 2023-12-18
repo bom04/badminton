@@ -11,10 +11,14 @@ import java.util.Date;
 @Builder
 @ToString
 public class UserDto {
+    private String loginId;
     private String email;
     private String provider;
     private String providerId;
 
     private String profileImage;
-//    private UploadFile attachFile;
+
+    public void generateLoginId() {
+        this.loginId = provider+'_'+providerId;
+    }
 }

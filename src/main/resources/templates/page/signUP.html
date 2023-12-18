@@ -99,6 +99,8 @@
                 }
                 previousFile=fileInput.files[0];
             }
+            console.log('previousFile1=',previousFile)
+            console.log('fileInput1=',fileInput.files[0])
 
             console.log('파일 선택');
             // 파일 선택에서 취소를 눌러 아무 파일을 선택하지 않았을때
@@ -108,6 +110,8 @@
                 return;
             }
             previousFile=fileInput.files[0];
+            console.log('previousFile2=',previousFile)
+            console.log('fileInput2=',fileInput.files[0])
 
             // 파일 선택시 즉각적으로 img 태그에 렌더링되게
             if (fileInput.files && fileInput.files[0]) {
@@ -120,6 +124,11 @@
                 reader.readAsDataURL(fileInput.files[0]);
             }
         }
+        // nickname.trim()을 한 후에 서버에 전달하려고
+        function trimNicknameInput() {
+            var nicknameInput = document.getElementById('nickname');
+            nicknameInput.value = nicknameInput.value.trim();
+        }
     </script>
 </head>
 
@@ -131,7 +140,7 @@
 <!-- 메인 페이지 -->
 <main class="form-signin w-100 m-auto">
 <div class="container">
-    <form novalidate th:object="${user}" method="post" enctype="multipart/form-data"> <!--th:action="@{/signUp}" method="post"-->
+    <form novalidate th:object="${user}" method="post" enctype="multipart/form-data" onsubmit="trimNicknameInput()"> <!--th:action="@{/signUp}" method="post"-->
         <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
         <hr>
 

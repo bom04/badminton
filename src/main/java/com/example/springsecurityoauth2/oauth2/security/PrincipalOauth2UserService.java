@@ -128,13 +128,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         User user = null;
 
         if(optionalUser.isEmpty()) {
-            // google-picture, kakao-
             UserDto userDto=UserDto.builder()
                     .email(email)
                     .provider(provider)
                     .providerId(providerId)
-                    .profileImage(profilePicture)
+                    .profileImage(profilePicture) // 소셜 유저 기본 프로필 이미지
                     .build();
+            userDto.generateLoginId();
             throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다",userDto);
 
 //            user = User.builder()

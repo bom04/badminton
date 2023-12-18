@@ -1,19 +1,18 @@
 package com.example.springsecurityoauth2.oauth2.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.springsecurityoauth2.oauth2.domain.UploadFile;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.UserDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
-import com.example.springsecurityoauth2.oauth2.validation.ValidFile;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Controller
@@ -52,6 +50,13 @@ public class LoginController {
 
     @Autowired
     private UserRepository userRepository;
+
+    private FileStore fileStore;
+
+    @Autowired
+    public LoginController(FileStore fileStore) {
+        this.fileStore = fileStore;
+    }
 
     @GetMapping("/notice")
     public String noticeBoard(Model model) {
@@ -104,8 +109,7 @@ public class LoginController {
 
     @PostMapping("/signUp")
     public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult,
-                         HttpSession session) {
-
+                         HttpSession session) throws IOException {
         UserDto userDto = (UserDto) session.getAttribute("userDto");
         form.setEmail(userDto.getEmail());
         form.setProfileImage(userDto.getProfileImage());
@@ -119,9 +123,37 @@ public class LoginController {
         }
 
         log.info("user={}",form);
-
         log.info("success");
-        return "page/signUp";
+
+        if(userRepository.existsByNickname(form.getNickname())) {
+            bindingResult.rejectValue("nickname", "nickname.duplicate", "이미 사용중인 닉네임입니다");
+            log.info("Nickname already exists");
+            return "page/signUp";
+        }
+
+        User user=User.builder()
+                .nickname(form.getNickname())
+                .email(userDto.getEmail())
+                .isMale(form.getIsMale())
+                .birth(form.getBirth())
+                .career(form.getCareer())
+                .provider(userDto.getProvider())
+                .providerId(userDto.getProviderId())
+                .loginId(userDto.getLoginId())
+                .role(UserRole.USER)
+                .build();
+
+        // 폼으로 전달된 이미지가 소셜 프로필의 기본 이미지일때
+        if(form.getImage().getOriginalFilename().equals("")) {
+            user.setProfileImageName(form.getProfileImage());
+        } else{
+            UploadFile attachFile = fileStore.storeFile(form.getImage());
+            user.setProfileImageName(attachFile.getStoreFileName());
+        }
+
+        userRepository.save(user);
+        session.removeAttribute("userDto");
+        return "redirect:/";
     }
 
     @GetMapping("/oauth_login")

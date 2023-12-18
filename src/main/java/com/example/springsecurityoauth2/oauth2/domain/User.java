@@ -18,6 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String loginId; // provider+providerId 합친 값(고유의 값이므로 이 값으로 유저를 찾음)
     private String nickname;
     private String email;
     private Boolean isMale;
@@ -25,8 +26,11 @@ public class User {
     private String career;
     private String provider;
     private String providerId;
-
     private UserRole role;
 
-//    private String image;
+    private String profileImageName; // uuid 방식의 프로필 이미지 이름
+
+    public void setProfileImageName(String profileImageName) {
+        this.profileImageName = profileImageName;
+    }
 }
