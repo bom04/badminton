@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Users")
+@Table(name = "Member")
 public class User {
 
     @Id
@@ -26,6 +26,8 @@ public class User {
     private String career;
     private String provider;
     private String providerId;
+
+    @Enumerated(EnumType.STRING) // enum type을 기본 int가 아니라 string으로 저장해서 무슨 코드를 의미하는지 바로 찾겠다
     private UserRole role;
 
     private String profileImageName; // uuid 방식의 프로필 이미지 이름
@@ -33,4 +35,14 @@ public class User {
     public void setProfileImageName(String profileImageName) {
         this.profileImageName = profileImageName;
     }
+
+//    @Builder
+//    public User(String name,String email,String picture,Role role) {
+//        this.name=name;
+//        this.email=email;
+//        this.picture=picture;
+//        this.role=role;
+//    }
+
+
 }

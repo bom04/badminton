@@ -39,9 +39,9 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
             
             // 여기에서 실패 처리 로직을 수행하고, 예를 들어 회원가입 페이지로 리다이렉트
-            log.info("dto={}",oAuth2AuthenticationException.getDto());
+            log.info("oAuthDto={}",oAuth2AuthenticationException.getDto());
             HttpSession session = request.getSession();
-            session.setAttribute("userDto", oAuth2AuthenticationException.getDto());
+            session.setAttribute("oAuthDto", oAuth2AuthenticationException.getDto());
 
             response.sendRedirect("/signUp");
         } else {

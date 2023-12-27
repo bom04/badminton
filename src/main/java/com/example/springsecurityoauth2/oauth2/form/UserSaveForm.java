@@ -2,7 +2,9 @@ package com.example.springsecurityoauth2.oauth2.form;
 
 import com.example.springsecurityoauth2.oauth2.validation.ValidFile;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;

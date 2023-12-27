@@ -2,15 +2,13 @@ package com.example.springsecurityoauth2.oauth2.security;
 
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
-import com.example.springsecurityoauth2.oauth2.domain.UserRole;
 import com.example.springsecurityoauth2.oauth2.exception.CustomOAuth2AuthenticationException;
-import com.example.springsecurityoauth2.oauth2.form.UserDto;
+import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -128,14 +126,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         User user = null;
 
         if(optionalUser.isEmpty()) {
-            UserDto userDto=UserDto.builder()
+            OAuthDto oAuthDto = OAuthDto.builder()
                     .email(email)
                     .provider(provider)
                     .providerId(providerId)
                     .profileImage(profilePicture) // 소셜 유저 기본 프로필 이미지
                     .build();
-            userDto.generateLoginId();
-            throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다",userDto);
+            oAuthDto.generateLoginId();
+            throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다", oAuthDto);
 
 //            user = User.builder()
 //                    .loginId(loginId)

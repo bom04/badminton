@@ -11,8 +11,9 @@ import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
-import com.example.springsecurityoauth2.oauth2.form.UserDto;
+import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import com.example.springsecurityoauth2.oauth2.service.SignUpService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,8 @@ public class LoginController {
     private UserRepository userRepository;
 
     private FileStore fileStore;
+    @Autowired
+    private SignUpService signUpService;
 
     @Autowired
     public LoginController(FileStore fileStore) {
@@ -94,14 +97,14 @@ public class LoginController {
 
     @GetMapping("/signUp")
     public String signUp(Model model, HttpSession session) throws Exception {
-        if(session.getAttribute("userDto")==null) {
+        if(session.getAttribute("oAuthDto")==null) {
             throw new Exception("잘못된 접근입니다!");
         }
-        UserDto userDto=(UserDto)session.getAttribute("userDto");
+        OAuthDto oAuthDto =(OAuthDto)session.getAttribute("oAuthDto");
         UserSaveForm form=new UserSaveForm();
         form.setIsMale(true);
-        form.setEmail(userDto.getEmail());
-        form.setProfileImage(userDto.getProfileImage());
+        form.setEmail(oAuthDto.getEmail());
+        form.setProfileImage(oAuthDto.getProfileImage());
         model.addAttribute("user", form);
         log.info("get form={}",form);
         return "page/signUp";
@@ -110,9 +113,9 @@ public class LoginController {
     @PostMapping("/signUp")
     public String signUp(@Validated @ModelAttribute("user") UserSaveForm form, BindingResult bindingResult,
                          HttpSession session) throws IOException {
-        UserDto userDto = (UserDto) session.getAttribute("userDto");
-        form.setEmail(userDto.getEmail());
-        form.setProfileImage(userDto.getProfileImage());
+        OAuthDto oAuthDto = (OAuthDto) session.getAttribute("oAuthDto");
+        form.setEmail(oAuthDto.getEmail());
+        form.setProfileImage(oAuthDto.getProfileImage());
 
         log.info("post form={}",form);
         log.info("post image={}",form.getImage().getOriginalFilename());
@@ -131,28 +134,10 @@ public class LoginController {
             return "page/signUp";
         }
 
-        User user=User.builder()
-                .nickname(form.getNickname())
-                .email(userDto.getEmail())
-                .isMale(form.getIsMale())
-                .birth(form.getBirth())
-                .career(form.getCareer())
-                .provider(userDto.getProvider())
-                .providerId(userDto.getProviderId())
-                .loginId(userDto.getLoginId())
-                .role(UserRole.USER)
-                .build();
+        String profileImage=signUpService.getProfileImageName(form);
 
-        // 폼으로 전달된 이미지가 소셜 프로필의 기본 이미지일때
-        if(form.getImage().getOriginalFilename().equals("")) {
-            user.setProfileImageName(form.getProfileImage());
-        } else{
-            UploadFile attachFile = fileStore.storeFile(form.getImage());
-            user.setProfileImageName(attachFile.getStoreFileName());
-        }
-
-        userRepository.save(user);
-        session.removeAttribute("userDto");
+        signUpService.save(form,oAuthDto,profileImage);
+        session.removeAttribute("oAuthDto");
         return "redirect:/";
     }
 
