@@ -5,6 +5,7 @@ import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -23,6 +24,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private RequestCache requestCache=new HttpSessionRequestCache();
 
     private RedirectStrategy redirectStrategy=new DefaultRedirectStrategy();
+    private HttpSession session;
 
     // db에 user 저장까지 한 후 실행되는 메소드
     @Override

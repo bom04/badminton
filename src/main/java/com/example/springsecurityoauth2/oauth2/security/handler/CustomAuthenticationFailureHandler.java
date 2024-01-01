@@ -36,7 +36,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         // 유저가 없을때 발생하는 예외
         if (exception instanceof CustomOAuth2AuthenticationException) {
             CustomOAuth2AuthenticationException oAuth2AuthenticationException = (CustomOAuth2AuthenticationException) exception;
-
             
             // 여기에서 실패 처리 로직을 수행하고, 예를 들어 회원가입 페이지로 리다이렉트
             log.info("oAuthDto={}",oAuth2AuthenticationException.getDto());

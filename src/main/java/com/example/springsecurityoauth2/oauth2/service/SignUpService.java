@@ -41,7 +41,7 @@ public class SignUpService {
         // 폼으로 전달된 이미지가 소셜 프로필의 기본 이미지일때
         if(form.getImage().getOriginalFilename().equals("")) {
             profileImage=form.getProfileImage(); // https://~
-        } else {
+        } else { // 직접 추가한 이미지일때
             UploadFile attachFile = fileStore.storeFile(form.getImage());
             profileImage=attachFile.getStoreFileName(); // ~.png
         }
