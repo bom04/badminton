@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <script src="/js/header.js"></script>
 </head>
@@ -24,8 +25,20 @@
                             <a class="nav-link" href="#">자유게시판</a>
                         </li>
                     </ul>
+<!--                    <form class="d-flex" role="search">-->
+<!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--                        <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--                    </form>-->
+                    <a href="#" class="d-flex link-body-emphasis text-decoration-none">
+                        <img src="${profileImageName}" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
                     <div class="text-end">
-                        <button type="button" onclick="redirectToLoginPage()" class="btn btn-outline-light me-2">Login</button>
+                        <li sec:authorize="isAnonymous()">
+                            <button type="button" onclick="redirectToLoginPage()" class="btn btn-outline-light me-2">Login</button>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <button type="button" onclick="logout()" class="btn btn-outline-light me-2">Logout</button>
+                        </li>
                     </div>
                 </div>
             </div>

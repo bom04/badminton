@@ -6,6 +6,8 @@ import com.example.springsecurityoauth2.oauth2.exception.CustomOAuth2Authenticat
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -122,7 +124,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         log.info("email={}",email);
         log.info("profile_image={}",profilePicture);
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+//        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByLoginId(provider+"_"+providerId);
         User user = null;
 
         if(optionalUser.isEmpty()) {
@@ -135,14 +138,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuthDto.generateLoginId();
             throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다", oAuthDto);
 
-//            user = User.builder()
-//                    .loginId(loginId)
-//                    .nickname(nickname)
-//                    .provider(provider)
-//                    .providerId(providerId)
-//                    .role(UserRole.USER)
-//                    .build();
-//            userRepository.save(user);
         } else {
             user = optionalUser.get();
         }

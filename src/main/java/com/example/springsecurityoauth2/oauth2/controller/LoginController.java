@@ -82,7 +82,11 @@ public class LoginController {
         model.addAttribute("posts",posts);
         return "board/notice";
     }
+    @GetMapping("/")
+    public String home(Model model) {
 
+        return "index";
+    }
     @GetMapping("/login")
     public String loginPage(Model model) {
         return "page/login";
