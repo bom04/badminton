@@ -1,4 +1,4 @@
-package com.example.springsecurityoauth2.oauth2.security.handler;
+package com.example.springsecurityoauth2.oauth2.handler;
 
 import com.example.springsecurityoauth2.oauth2.exception.CustomOAuth2AuthenticationException;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;

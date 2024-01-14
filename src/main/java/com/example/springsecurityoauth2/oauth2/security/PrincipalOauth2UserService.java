@@ -2,12 +2,11 @@ package com.example.springsecurityoauth2.oauth2.security;
 
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
+import com.example.springsecurityoauth2.oauth2.dto.PrincipalUserDetails;
 import com.example.springsecurityoauth2.oauth2.exception.CustomOAuth2AuthenticationException;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -98,7 +97,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     // 로그인 후 회원가입 진행
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         OAuth2UserInfo oAuth2UserInfo = null;
@@ -124,7 +123,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         log.info("email={}",email);
         log.info("profile_image={}",profilePicture);
-//        Optional<User> optionalUser = userRepository.findByEmail(email);
         Optional<User> optionalUser = userRepository.findByLoginId(provider+"_"+providerId);
         User user = null;
 
@@ -137,11 +135,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .build();
             oAuthDto.generateLoginId();
             throw new CustomOAuth2AuthenticationException("회원이 존재하지 않습니다", oAuthDto);
-
         } else {
             user = optionalUser.get();
         }
 
-        return new PrincipalDetails(user, oAuth2User.getAttributes());
+        return new PrincipalUserDetails(user, oAuth2User.getAttributes());
     }
 }

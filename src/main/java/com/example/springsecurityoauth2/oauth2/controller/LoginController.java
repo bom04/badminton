@@ -1,6 +1,7 @@
 package com.example.springsecurityoauth2.oauth2.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,22 +14,31 @@ import com.example.springsecurityoauth2.oauth2.domain.UserRole;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import com.example.springsecurityoauth2.oauth2.handler.CustomAccessDeniedHandler;
 import com.example.springsecurityoauth2.oauth2.service.SignUpService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -36,6 +46,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import javax.security.sasl.AuthenticationException;
 
 @Slf4j
 @Controller
@@ -52,7 +64,7 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
-    private FileStore fileStore;
+    private final FileStore fileStore;
     @Autowired
     private SignUpService signUpService;
 
@@ -87,6 +99,27 @@ public class LoginController {
 
         return "index";
     }
+    @GetMapping("/errorPage")
+    public String errorPage(@RequestParam(value = "exception",required = false) String exception,
+                               Model model) {
+        if(exception!=null) {
+            if(exception.contains("Access")) {
+                model.addAttribute("title","Access Denied");
+            }
+            else if(exception.contains("authentication"))
+            model.addAttribute("title","HttpStatus 401 Unauthorized");
+        }
+        model.addAttribute("content",exception);
+        return "etc/error";
+    }
+    
+    // 프로필 이미지 사진 보이게 할때 사용하는 컨트롤러
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource showImage(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:" + fileStore.getFullPath(filename));
+    }
+
     @GetMapping("/login")
     public String loginPage(Model model) {
         return "page/login";
@@ -100,17 +133,18 @@ public class LoginController {
     }
 
     @GetMapping("/signUp")
-    public String signUp(Model model, HttpSession session) throws Exception {
-        if(session.getAttribute("oAuthDto")==null) {
-            throw new Exception("잘못된 접근입니다!");
+    public String signUp(Model model, HttpSession session) throws AuthenticationException {
+        try {
+            OAuthDto oAuthDto= (OAuthDto) session.getAttribute("oAuthDto");
+            UserSaveForm form=new UserSaveForm();
+            form.setIsMale(true);
+            form.setEmail(oAuthDto.getEmail());
+            form.setProfileImage(oAuthDto.getProfileImage());
+            model.addAttribute("user", form);
+            log.info("get form={}",form);
+        } catch(Exception e) {
+            throw new AuthenticationException(e.getMessage());
         }
-        OAuthDto oAuthDto =(OAuthDto)session.getAttribute("oAuthDto");
-        UserSaveForm form=new UserSaveForm();
-        form.setIsMale(true);
-        form.setEmail(oAuthDto.getEmail());
-        form.setProfileImage(oAuthDto.getProfileImage());
-        model.addAttribute("user", form);
-        log.info("get form={}",form);
         return "page/signUp";
     }
 

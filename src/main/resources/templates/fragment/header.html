@@ -25,13 +25,18 @@
                             <a class="nav-link" href="#">자유게시판</a>
                         </li>
                     </ul>
-<!--                    <form class="d-flex" role="search">-->
-<!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                        <button class="btn btn-outline-success" type="submit">Search</button>-->
-<!--                    </form>-->
-                    <a href="#" class="d-flex link-body-emphasis text-decoration-none">
-                        <img src="${profileImageName}" alt="mdo" width="32" height="32" class="rounded-circle">
+                    <!-- 프로필 이미지-->
+                    <a sec:authorize="isAuthenticated()" href="/profile" class="d-flex link-body-emphasis text-decoration-none">
+                        <div th:if="${profileImageName.startsWith('https://') or profileImageName.startsWith('http://')}">
+                            <img th:src="${profileImageName}" alt="mdo" width="35px" height="35px" class="rounded-circle">
+                        </div>
+                        <div th:unless="${profileImageName.startsWith('https://') or profileImageName.startsWith('http://')}">
+                            <img th:src="|/images/${profileImageName}|" alt="mdo" width="35px" height="35px" class="rounded-circle">
+                        </div>
                     </a>
+<!--                    <a sec:authorize="isAuthenticated()" href="/profile" class="d-flex link-body-emphasis text-decoration-none">-->
+<!--                        <img th:src="|/images/${profileImageName}|" alt="mdo" width="35px" height="35px" class="rounded-circle">-->
+<!--                    </a>-->
                     <div class="text-end">
                         <li sec:authorize="isAnonymous()">
                             <button type="button" onclick="redirectToLoginPage()" class="btn btn-outline-light me-2">Login</button>

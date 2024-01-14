@@ -57,9 +57,6 @@ class LoginControllerTest {
 
     private UserSaveForm form;
 
-    @Test
-    void signUp() {
-    }
     @BeforeEach
     void setSession() {
         session = new MockHttpSession();
