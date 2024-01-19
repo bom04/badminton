@@ -2,7 +2,9 @@ package com.example.springsecurityoauth2.oauth2.controller;
 
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.dto.PrincipalUserDetails;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +22,15 @@ public class ProfileController {
                 .isMale(false)
                 .role(UserRole.USER)
                 .birth("1996-03-12")
-                .career("B")
+                .career("D")
                 .profileImageName("https://lh3.googleusercontent.com/a/ACg8ocLqNV1r7xY49rNX5lOoLYDg7ChGAI6QW_Z2FUrcSJpyzw=s96-c")
                 .build();
     }
     @GetMapping("/profile")
     public String profile(Model model) {
         setUser();
+        PrincipalUserDetails userDetails=(PrincipalUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user=userDetails.getUser();
         model.addAttribute("user",user);
         return "user/profile";
     }

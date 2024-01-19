@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
   <title>일파만파</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -15,19 +16,45 @@
 </header>
 
 <main class="form-signin w-100 m-auto">
-  <div class="container">
-    프로필 이미지<h1 th:text="${user.nickname}"></h1>
-    <p style="color: grey">google-gmaru6420@gmail.com</p>
-    <p>생년월일</p>
-    <p>성별</p>
-    <p>구력</p>
-  </div>
+    <div class="container">
+        <span th:text="${user.role}" class="badge text-bg-danger mb-3">관리자</span>
+        <!-- 프로필 이미지-->
+        <div class="d-flex align-items-center link-body-emphasis text-decoration-none mb-3">
+            <div th:if="${profileImageName.startsWith('https://') or profileImageName.startsWith('http://')}">
+                <img th:src="${profileImageName}" alt="mdo" width="70px" height="70px" class="rounded-circle">
+            </div>
+            <div th:unless="${profileImageName.startsWith('https://') or profileImageName.startsWith('http://')}">
+                <img th:src="|/images/${profileImageName}|" alt="mdo" width="70px" height="70px" class="rounded-circle">
+            </div>
+<!--           <img src="https://github.com/mdo.png" alt="mdo" width="70px" height="70px" class="rounded-circle">-->
+            <h1 th:text="${user.nickname}" style="text-align: center; margin-left: 10px">닉네임</h1>
+        </div>
+        <table th:object="${user}" class="table table-borderless">
+          <tbody>
+          <tr>
+              <th scope="row">이메일</th>
+              <td th:text="*{email + ' (' + provider + ')'}">gmaru6420@gmail.com (google1)</td>
+          </tr>
+          <tr>
+              <th scope="row">생년월일</th>
+              <td th:text="*{birth}">1996-04-20</td>
+          </tr>
+          <tr>
+              <th scope="row">성별</th>
+              <td th:text="*{isMale}?'남자':'여자'">여자</td>
+          </tr>
+          <tr>
+              <th scope="row">구력</th>
+              <td th:text="*{career}">D급</td>
+          </tr>
+          </tbody>
+        </table>
+    </div>
   <button class="btn btn-primary w-100 py-2 mt-3" type="submit">Edit</button>
   <hr>
   <p>작성글 1개</p>
   <p>작성댓글 1개</p>
 </main>
-
 
 <footer>
   <div th:replace="~{fragment/footer}"></div>
