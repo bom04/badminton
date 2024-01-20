@@ -1,9 +1,6 @@
 package com.example.springsecurityoauth2.oauth2.service;
 
-import com.example.springsecurityoauth2.oauth2.domain.UploadFile;
-import com.example.springsecurityoauth2.oauth2.domain.User;
-import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
-import com.example.springsecurityoauth2.oauth2.domain.UserRole;
+import com.example.springsecurityoauth2.oauth2.domain.*;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
@@ -12,21 +9,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class SignUpService {
+public class UserService {
     private final UserRepository userRepository;
     private final FileStore fileStore;
 
     @Transactional
     public Long save(UserSaveForm form, OAuthDto oAuthDto,String profileImage) {
+        Career career = convertCareerStringToEnum(form.getCareer());
+
         User user=User.builder()
                 .nickname(form.getNickname())
                 .email(oAuthDto.getEmail())
                 .isMale(form.getIsMale())
                 .birth(form.getBirth())
-                .career(form.getCareer())
+                .career(career)
                 .provider(oAuthDto.getProvider())
                 .providerId(oAuthDto.getProviderId())
                 .profileImageName(profileImage)
@@ -35,6 +35,17 @@ public class SignUpService {
                 .build();
 
         return userRepository.save(user).getId();
+    }
+    @Transactional
+    public Long update(UserSaveForm form,User user,String profileImage) {
+        User user1 = userRepository.findById(user.getId()).get();
+        Career career = convertCareerStringToEnum(form.getCareer());
+        user1.setNickname(form.getNickname());
+        user1.setBirth(form.getBirth());
+        user1.setIsMale(form.getIsMale());
+        user1.setCareer(career);
+        user1.setProfileImageName(profileImage);
+        return userRepository.save(user1).getId();
     }
     public String getProfileImageName(UserSaveForm form) throws IOException {
         String profileImage=null;
@@ -46,5 +57,9 @@ public class SignUpService {
             profileImage=attachFile.getStoreFileName(); // ~.png
         }
         return profileImage;
+    }
+
+    public Career convertCareerStringToEnum(String careerString) {
+        return Career.valueOf(careerString);
     }
 }

@@ -6,18 +6,12 @@ import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import static org.assertj.core.api.BDDAssumptions.given;
@@ -25,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SignUpServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
     private FileStore fileStore;
     @InjectMocks
-    private SignUpService signUpService;
+    private UserService userService;
 
     @Test
     void save() {
@@ -57,7 +51,7 @@ class SignUpServiceTest {
         when(mockUser.getId()).thenReturn(1L);
 
         // when
-        Long userId = signUpService.save(form, oAuthDto, profileImage);
+        Long userId = userService.save(form, oAuthDto, profileImage);
         // then
         verify(userRepository, times(1)).save(any(User.class));
         assertEquals(1L, userId);
@@ -71,7 +65,7 @@ class SignUpServiceTest {
         form.setProfileImage("https://mock-filename");
 
         //when
-        String profileImage=signUpService.getProfileImageName(form);
+        String profileImage= userService.getProfileImageName(form);
         //then
         assertEquals("https://mock-filename", profileImage);
         verify(fileStore, times(0)).storeFile(any(MultipartFile.class));
@@ -86,7 +80,7 @@ class SignUpServiceTest {
         when(fileStore.storeFile(any(MultipartFile.class))).thenReturn(mockUploadFile);
 
         //when
-        profileImage=signUpService.getProfileImageName(form);
+        profileImage= userService.getProfileImageName(form);
         //then
         assertEquals("1ff.jpg", profileImage);
         verify(fileStore, times(1)).storeFile(any(MultipartFile.class));

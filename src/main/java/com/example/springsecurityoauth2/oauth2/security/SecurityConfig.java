@@ -82,8 +82,9 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/oauth_login", "/loginFailure", "/h2-console/**",
-                                        "/","/login","/signUp","/errorPage","/profile","/test").permitAll()
-                                .requestMatchers("/notice").hasRole("ADMIN")
+                                        "/","/login","/signUp","/errorPage","/test").permitAll()
+                                .requestMatchers("/profile","/profile/edit").hasRole("USER")
+                                .requestMatchers("/notice").hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->

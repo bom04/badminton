@@ -3,6 +3,7 @@ package com.example.springsecurityoauth2.oauth2.dto;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -26,6 +27,9 @@ public class PrincipalUserDetails implements UserDetails, OAuth2User {
         this.user = user;
         this.attributes = attributes;
     }
+    public void setUser(User user) {
+        this.user=user;
+    }
 
     @Override
     public String getName() {
@@ -41,9 +45,10 @@ public class PrincipalUserDetails implements UserDetails, OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collections = new ArrayList<>();
-        collections.add(() -> {
-            return user.getRole().name();
-        });
+//        collections.add(() -> {
+//            return user.getRole().name();
+//        });
+        collections.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return collections;
     }

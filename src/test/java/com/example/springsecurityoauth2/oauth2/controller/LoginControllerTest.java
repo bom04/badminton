@@ -4,35 +4,24 @@ import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
-import com.example.springsecurityoauth2.oauth2.service.SignUpService;
-import org.aspectj.lang.annotation.Before;
-import org.h2.engine.Session;
+import com.example.springsecurityoauth2.oauth2.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
 //@SpringBootTest
@@ -44,7 +33,7 @@ class LoginControllerTest {
     private MockMvc mockMvc;
     private MockHttpSession session;
     @MockBean
-    private SignUpService signUpService;
+    private UserService userService;
 
     @MockBean
     private UserRepository userRepository;

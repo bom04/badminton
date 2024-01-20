@@ -7,17 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.springsecurityoauth2.oauth2.domain.UploadFile;
 import com.example.springsecurityoauth2.oauth2.domain.User;
 import com.example.springsecurityoauth2.oauth2.domain.UserRepository;
 import com.example.springsecurityoauth2.oauth2.domain.UserRole;
 import com.example.springsecurityoauth2.oauth2.form.FileStore;
 import com.example.springsecurityoauth2.oauth2.form.OAuthDto;
 import com.example.springsecurityoauth2.oauth2.form.UserSaveForm;
-import com.example.springsecurityoauth2.oauth2.handler.CustomAccessDeniedHandler;
-import com.example.springsecurityoauth2.oauth2.service.SignUpService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.springsecurityoauth2.oauth2.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +24,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -66,7 +58,7 @@ public class LoginController {
 
     private final FileStore fileStore;
     @Autowired
-    private SignUpService signUpService;
+    private UserService userService;
 
     @Autowired
     public LoginController(FileStore fileStore) {
@@ -172,9 +164,9 @@ public class LoginController {
             return "page/signUp";
         }
 
-        String profileImage=signUpService.getProfileImageName(form);
+        String profileImage= userService.getProfileImageName(form);
 
-        signUpService.save(form,oAuthDto,profileImage);
+        userService.save(form,oAuthDto,profileImage);
         session.removeAttribute("oAuthDto");
         return "redirect:/";
     }
