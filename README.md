@@ -1,1 +1,1 @@
-- [프로젝트 관련 정리한 것]()
+- [프로젝트 관련 정리한 것](https://github.com/bom04/badminton/tree/master/TIL)
