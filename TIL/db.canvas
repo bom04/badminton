@@ -1,0 +1,12 @@
+{
+	"nodes":[
+		{"id":"028fc7025aa03df7","type":"text","text":"### Users\n- Id(pk)\n- **loginId(provider_providerId)**-유저 구분\n- provider\n- providerId\n- email\n- nickname\n- isMale\n- birth(`date`?)\n- career // 구력\n- role\n- profileImage\n\t- 기본 소셜 프로필 이미지일때: `https://~~`로 저장됨\n\t- 사용자가 직접 설정한 이미지일때: `.png` 확장자로 저장됨","x":-381,"y":-500,"width":250,"height":560},
+		{"id":"6cde053449ab2295","type":"text","text":"### Image\n- Id(pk)\n- location\n- ","x":-40,"y":-295,"width":250,"height":272},
+		{"id":"d215f9d1e43d7c43","type":"text","text":"### Board\n","x":-320,"y":160,"width":250,"height":200}
+	],
+	"edges":[
+		{"id":"94cb15a0b2c7dcf1","fromNode":"028fc7025aa03df7","fromSide":"right","toNode":"6cde053449ab2295","toSide":"left","fromEnd":"arrow"},
+		{"id":"797fc09629b8ecb6","fromNode":"028fc7025aa03df7","fromSide":"bottom","toNode":"d215f9d1e43d7c43","toSide":"top"},
+		{"id":"f8abbfef1a98fc4c","fromNode":"d215f9d1e43d7c43","fromSide":"right","toNode":"6cde053449ab2295","toSide":"left"}
+	]
+}

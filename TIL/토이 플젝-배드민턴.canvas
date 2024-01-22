@@ -1,0 +1,20 @@
+{
+	"nodes":[
+		{"id":"14593e0259854112","type":"text","text":"### 추가기능\n- 일반 회원 이름 옆에 라벨?(20대,D조,오전 등등)\n","x":-380,"y":-640,"width":250,"height":200},
+		{"id":"b4d389226ca05aab","type":"text","text":"# 배드민턴 클럽 프로젝트\n카톡,밴드 등으로 흩어져있는 정보들을 한 곳으로 모아 회원뿐만 아니라 비회원들도 쉽게 정보를 찾고 접근할 수 있게 하자","x":-846,"y":-680,"width":349,"height":160},
+		{"id":"8df8572bf8800cce","type":"text","text":"### 게시판\n1. 공지사항 게시판(관리자, 매니저)\n\t1. 행사,대회 등 공지사항\n\t2. 레슨 공지사항\n2. 공구 게시판(마감 기능?)\n3. 분실물 게시판\n4. 팀 구함 게시판\n5. 자유게시판\n- 2~5: 같은 기능\n-  댓글/대댓글\n- 글 좋아요 기능?\n- 조회수 기능?\n- 글 제목/내용 검색","x":-846,"y":-495,"width":250,"height":433},
+		{"id":"37b74508284e3a9e","type":"text","text":"### 회원\n1. 로그인 안한 사용자\n2. 로그인 한 사용자(이름 옆에 라벨 달기)\n\t1. 관리자\n\t2. 매니저- 새벽,오전,오후,청년,중장년 등+회장+코치\n\t3. 일반 회원\n\t- 계층: 관리자>매니저>일반 회원","x":-546,"y":-380,"width":320,"height":270},
+		{"id":"6f585f55e8802fb5","type":"text","text":"### 권한\n- 로그인 안한 사용자: 공지사항 읽기만 가능, 나머지는 접근 불가능\n- 공통점: 본인 글 작성/수정/삭제\n- 관리자: +매니저 임명\n1. 공지사항: 관리자,매니저 글 작성/수정/삭제\n2. 그 외 게시판: 관리자,매니저,일반회원 글 작성/삭제 가능 ","x":-511,"y":-62,"width":250,"height":402},
+		{"id":"3dce57d7b4c1a0a2","type":"text","text":"### 질문\n- 닉네임으로 활동?-이미 밴드나 카톡,팀 카톡 다 실명으로 활동중\n- 매니저 임명시 이름이 같은 사람은 어떻게 구별할까? -생년월일 확인으로? `@1ghe3w`같은 고유 번호 부여?","x":-846,"y":-40,"width":250,"height":300},
+		{"id":"bef49f26cb76bf3c","type":"text","text":"### 내 정보\n- 이름/생년월일\n- 가입일?\n- 내가 쓴 글/댓글\n- 좋아요 누른 글?\n- 프로필 사진? -redis","x":-1100,"y":-380,"width":220,"height":222},
+		{"id":"f3e1b3d1faf24dec","type":"text","text":"### 기술\n- spring jpa\n- spring security\n- test? (security test?)\n- thymeleaf\n- mysql\n- 배포-aws,docker?","x":-226,"y":-80,"width":250,"height":255},
+		{"id":"71f42a52e37f9d76","type":"text","text":"### 로그인- 소셜 로그인으로만\n- 카톡 로그인","x":-200,"y":-339,"width":250,"height":159},
+		{"id":"42548f8a6d83eefd","type":"text","text":"### 선행 학습\n1. db 계층으로 spring security 적용하기?  \n2. 소셜 로그인\n\t1. ~~소셜 로그인~~\n\t2. 프로필 사진 redis?\n\t3. ~~소셜 로그인+db 연동+spring -security~~\n\t4. ~~jwt 토큰 구현 - [[(해결) JWT 인증이란#결론|thymeleaf로는 jwt 토큰 방식이 적합하지 않음]]~~\n3. 진행 중에 디자인 패턴 참고?\n4. 검색 기능 구현시 db 인덱스 참고\n5. ","x":-1218,"y":-70,"width":338,"height":350}
+	],
+	"edges":[
+		{"id":"235041a1dcc5295f","fromNode":"37b74508284e3a9e","fromSide":"left","toNode":"8df8572bf8800cce","toSide":"right"},
+		{"id":"175cb493eb1195eb","fromNode":"37b74508284e3a9e","fromSide":"bottom","toNode":"6f585f55e8802fb5","toSide":"top"},
+		{"id":"07951ffb50b9681d","fromNode":"8df8572bf8800cce","fromSide":"left","toNode":"bef49f26cb76bf3c","toSide":"right","toEnd":"none"},
+		{"id":"6c8da58328223acf","fromNode":"37b74508284e3a9e","fromSide":"right","toNode":"71f42a52e37f9d76","toSide":"left"}
+	]
+}

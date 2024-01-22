@@ -1,0 +1,12 @@
+{
+	"nodes":[
+		{"id":"358019345ebc7ea0","type":"text","text":"# 기존 소셜 로그인","x":-320,"y":-300,"width":250,"height":60},
+		{"id":"826f2fbc1dd41515","type":"text","text":"1. `userService`의 `loadUser()`에서 유저 찾고 없으면 유저 저장 구현하기\n2. `successHandler`가 실행됨","x":-320,"y":-180,"width":250,"height":200},
+		{"id":"2540902c1b47251e","type":"text","text":"# OAuth 로그인 후 회원가입","x":-40,"y":-300,"width":372,"height":60},
+		{"id":"e5763b79d0a95333","type":"text","text":"1. `userService`의 `loadUser()`에서 유저 찾음\n\t1. 유저가 있으면 `userDetails`,`OAuth2User`를 구현한 객체 반환함\n\t2. 유저가 없으면 인증 예외 발생시키기. 이때 `response`에 해당 소셜 유저의 데이터를 담아서 보냄\n2. `failureHandler`가 실행됨. 받은 예외가 위의 인증 예외일때 response에서 받은 유저 데이터를 다시 response로 보내고 `/signUp` 회원가입 페이지로 이동하기\n3. `controller`에서 유저 저장 구현하기","x":-8,"y":-190,"width":308,"height":440}
+	],
+	"edges":[
+		{"id":"57837d3d085b32bc","fromNode":"358019345ebc7ea0","fromSide":"bottom","toNode":"826f2fbc1dd41515","toSide":"top"},
+		{"id":"999247e20ecd30e3","fromNode":"2540902c1b47251e","fromSide":"bottom","toNode":"e5763b79d0a95333","toSide":"top"}
+	]
+}
